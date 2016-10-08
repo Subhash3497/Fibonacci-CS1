@@ -10,29 +10,55 @@
 #include "Fibonacci.h"
 #include <string.h>
 
-/*HugeInteger *hugeAdd(HugeInteger *p, HugeInteger *q)
+HugeInteger *hugeAdd(HugeInteger *p, HugeInteger *q)
 {
     int i;
     HugeInteger *sum_of_ints;
+    int sum;
+    int size_of_num;
+    
+    if (p->length > q->length)
+    {
+        size_of_num = p->length + 1;
+    }
+    else if (q->length > p->length)
+    {
+        size_of_num = q->length + 1;
+    }
+    else
+    {
+        size_of_num = p->length + 2;
+    }
     
     //Dynamic Memory allocation of digits to hold the sum
-    sum_of_ints->digits = malloc(sizeof(int) * 500);
+    sum_of_ints = malloc(sizeof(sum_of_ints));
+    sum_of_ints->digits = calloc(size_of_num, sizeof(int));
     
-    //Initialization of array digits
-    for (i = 0; i < 500; i++)
+    
+
+    for (i = 0; i < size_of_num; i++)
     {
-        sum_of_ints->digits[i] = 0;
+        
+        sum = p->digits[i] + q->digits[i];
+        
+        if (sum >= 10)
+        {
+            sum_of_ints->digits[i] += (sum % 10);
+            sum_of_ints->digits[i+1] = 1;
+        }
+        else
+        {
+            sum_of_ints->digits[i] += sum;
+        }
     }
     
-    for (i = 0; i < 500 ; i++)
+    for (i = 0; i < size_of_num; i++)
     {
-        sum_of_ints->digits[i] = p->digits[i] + q->digits[i];
+        printf("%d\n",sum_of_ints->digits[i]);
     }
     
-  
-    return 0 ;
+    return sum_of_ints;
 }
-*/
 
 HugeInteger *parseString(char *str)
 {
@@ -86,14 +112,16 @@ HugeInteger *parseInt(unsigned int n)
     int i = 0;
     unsigned int number = n;
     
-    for(temp = n; temp >= 1; decimalPlaces++)
+    for(temp = n; temp > 1; decimalPlaces++)
     {
         temp/=10;
     }
     
     HugeInteger *big_num;
     big_num = malloc(sizeof(big_num));
-    big_num->digits = calloc(decimalPlaces,sizeof(int));
+    big_num->digits = calloc(10,sizeof(int));
+    
+    
     if (decimalPlaces == 0)
     {
         big_num->length = 1;
@@ -127,21 +155,26 @@ HugeInteger *parseInt(unsigned int n)
 unsigned int *toUnsignedInt(HugeInteger *p)
 {
     int i, temp = 0;
-    unsigned int *this_is_not_a_signed_int_yo;
-    this_is_not_a_signed_int_yo = calloc(p->length, sizeof(unsigned int));
+    unsigned int inputnum = malloc(sizeof(unsigned int));
+    inputnum = 0;
+    
+    if (p == NULL)
+    {
+        return NULL;
+    }
+    else if (p->length >= 10)
+    {
+        return NULL;
+    }
     
     for (i = 0; i < p->length; i++)
     {
         temp = p->digits[i];
-        this_is_not_a_signed_int_yo += temp * (int)pow(10, i);
+        inputnum += (temp * (int)pow(10, i));
     }
-    
-    
-    
-    
-    return this_is_not_a_signed_int_yo;
-}
 
+    return &inputnum;
+}
 
 
 // print a HugeInteger (followed by a newline character)
@@ -207,7 +240,7 @@ int main(void)
     printf("%u\n", *(temp = toUnsignedInt(p)));
     free(temp);
     hugeDestroyer(p);
-
+    
     return 0;
 }
 
