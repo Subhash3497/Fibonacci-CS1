@@ -38,7 +38,6 @@ HugeInteger *hugeAdd(HugeInteger *p, HugeInteger *q)
 
     for (i = 0; i < size_of_num; i++)
     {
-        
         sum = p->digits[i] + q->digits[i];
         
         if (sum >= 10)
@@ -176,6 +175,52 @@ unsigned int *toUnsignedInt(HugeInteger *p)
     return &inputnum;
 }
 
+HugeInteger *fib(int n)
+{
+    int i,j;
+    HugeInteger *fib_num = malloc(sizeof(HugeInteger));
+    fib_num->digits = calloc(n, sizeof(int));
+    
+    HugeInteger *numprevious1;
+    numprevious1 = malloc(sizeof(HugeInteger));
+    numprevious1->digits = calloc(100, sizeof(int));
+    
+    HugeInteger *numprevious2;
+    numprevious2 = malloc(sizeof(HugeInteger));
+    numprevious2->digits = calloc(100, sizeof(int));
+    
+    numprevious2->digits[0] = 1;
+    numprevious1->digits[0] = 1;
+    
+    if (n == 0)
+    {
+        fib_num->digits[0] = 0;
+        return fib_num;
+    }
+    else if (n == 1)
+    {
+        fib_num->digits[0] = 1;
+        return fib_num;
+    }
+    else if (n == 2)
+    {
+        fib_num->digits[0] = 1;
+        return fib_num;
+    }
+    else
+    {
+        for (i = 2,j = 0; i <= n; i++)
+        {
+            fib_num = hugeAdd(numprevious1, numprevious2);
+            numprevious2 = numprevious1;
+            numprevious1 = fib_num;
+        }
+    }
+    
+    return 0;
+}
+
+
 
 // print a HugeInteger (followed by a newline character)
 void hugePrint(HugeInteger *p)
@@ -195,51 +240,15 @@ void hugePrint(HugeInteger *p)
 
 int main(void)
 {
-    unsigned int *temp;
+    int i;
     HugeInteger *p;
     
-    hugePrint(p = parseString("12345"));
-    printf("%u\n", *(temp = toUnsignedInt(p)));
-    free(temp);
-    hugeDestroyer(p);
-    
-    hugePrint(p = parseString("354913546879519843519843548943513179"));
-    temp = toUnsignedInt(p);
-    if (temp == NULL)
-        printf("Good work.\n");
-    else
-        printf("Uh oh...\n");
-    free(temp);
-    hugeDestroyer(p);
-    
-    hugePrint(p = parseString(NULL));
-    temp = toUnsignedInt(p);
-    if (temp == NULL)
-        printf("Good work.\n");
-    else
-        printf("Uh oh...\n");
-    free(temp);
-    hugeDestroyer(p);
-    
-    hugePrint(p = parseInt(246810));
-    printf("%u\n", *(temp = toUnsignedInt(p)));
-    free(temp);
-    hugeDestroyer(p);
-    
-    hugePrint(p = parseInt(0));
-    printf("%u\n", *(temp = toUnsignedInt(p)));
-    free(temp);
-    hugeDestroyer(p);
-    
-    hugePrint(p = parseInt(INT_MAX));
-    printf("%u\n", *(temp = toUnsignedInt(p)));
-    free(temp);
-    hugeDestroyer(p);
-    
-    hugePrint(p = parseInt(UINT_MAX));
-    printf("%u\n", *(temp = toUnsignedInt(p)));
-    free(temp);
-    hugeDestroyer(p);
+    for (i = 0; i <= 10; i++)
+    {
+        printf("F(%d) = ", i);
+        hugePrint(p = fib(i));
+        hugeDestroyer(p);
+    }
     
     return 0;
 }
