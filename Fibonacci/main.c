@@ -17,13 +17,18 @@ HugeInteger *parseString(char *str)
     big_num = malloc(sizeof(big_num));
 
     if (str == NULL)
+    {
         return NULL;
-
+    }
     else if (big_num == NULL)
     {
         puts("Out of Memory");
         free(big_num);
         return NULL;
+    }
+    else if (str == "")
+    {
+        str = "0";
     }
 
     string_length = strlen(str);
@@ -62,11 +67,11 @@ HugeInteger *parseInt(unsigned int n)
     unsigned int number = n;
 
     HugeInteger *big_num;
-    big_num = malloc(sizeof(big_num));
-    big_num->digits = calloc(10,sizeof(int));
+    big_num = malloc(sizeof(HugeInteger));
+    big_num->digits = calloc(11,sizeof(int));
 
 
-    for(temp = n; temp > 1; decimalPlaces++)
+    for(temp = n; temp >= 1; decimalPlaces++)
     {
         temp/=10;
     }
@@ -105,7 +110,7 @@ unsigned int *toUnsignedInt(HugeInteger *p)
 {
     int i, j = 1;
     unsigned int number = 0;
-    unsigned int *inputnum =(unsigned int)malloc(sizeof(unsigned int));
+    unsigned int *inputnum = malloc(sizeof(unsigned int));
 
     if (p == NULL)
     {
@@ -133,45 +138,48 @@ unsigned int *toUnsignedInt(HugeInteger *p)
 
 HugeInteger *hugeAdd(HugeInteger *p, HugeInteger *q)
 {
-    int i;
-    HugeInteger *sum_of_ints;
-    int sum;
-
-    //Dynamic Memory allocation of digits to hold the sum
-    sum_of_ints = malloc(sizeof(sum_of_ints) + 1);
-
-    if (p->length > q->length)
+    HugeInteger *sum_array = malloc(sizeof(HugeInteger));
+    int sum_length = 0;
+    int carry_num = 0;
+    int sum_of_digits = 0;
+    int i = 0;
+    int digit1 = 0,digit2 = 0;
+    
+    sum_length = p->length > q->length ? p->length + 1: q->length + 1;
+    sum_array->length = sum_length;
+    sum_array->digits = calloc(sum_length, sizeof(int));
+    
+    
+    for (i = 0; i < sum_length; i++)
     {
-        sum_of_ints->length = p->length;
-    }
-    else if (q->length > p->length)
-    {
-        sum_of_ints->length = q->length;
-    }
-    else
-    {
-        sum_of_ints->length = q->length + 1;
-    }
-
-    sum_of_ints->digits = calloc(sum_of_ints->length, sizeof(int));
-
-
-    for (i = 0; i < sum_of_ints->length; i++)
-    {
-        sum = p->digits[i] + q->digits[i];
-
-        if (sum >= 10)
+        digit1 = (i > p->length - 1) ? 0 : p->digits[i];
+        digit2 = (i > q->length - 1) ? 0 : q->digits[i];
+        
+        sum_of_digits = digit1 + digit2 + carry_num;
+        
+        if (sum_of_digits >= 10)
         {
-            sum_of_ints->digits[i] += (sum % 10);
-            sum_of_ints->digits[i+1] = 1;
+            sum_of_digits -= 10;
+            carry_num = 1;
         }
         else
         {
-            sum_of_ints->digits[i] += sum;
+            carry_num = 0;
         }
+        
+        sum_array->digits[i] += sum_of_digits;
     }
-
-    return sum_of_ints;
+    if (carry_num == 1)
+    {
+        sum_array->digits[i++] = 1;
+    }
+    
+    if (i == sum_length && sum_array->digits[i - 1] == 0)
+    {
+        sum_array->length = sum_array->length - 1;
+    }
+    
+    return sum_array;
 }
 
 HugeInteger *fib(int n)
@@ -180,16 +188,16 @@ HugeInteger *fib(int n)
 
     //Struct to hold the final fib number
     HugeInteger *fib_num = malloc(sizeof(HugeInteger));
-    fib_num->digits = malloc(sizeof(int) * 300);
+    fib_num->digits = calloc(300,sizeof(int));
 
     //Struct to hold the previous fib number.
     HugeInteger *current = malloc(sizeof(HugeInteger));
-    current->digits = malloc(sizeof(int) * 300);
+    current->digits = calloc(300,sizeof(int));
     current = parseInt(1);
 
     //Struct to hold the previous previous fib number.
     HugeInteger *previous = malloc(sizeof(HugeInteger));
-    previous->digits = malloc(sizeof(int) * 300);
+    previous->digits = calloc(300,sizeof(int));
     previous = parseInt(0);
 
     if (n == 0)
@@ -205,12 +213,11 @@ HugeInteger *fib(int n)
     }
     else
     {
-        for(i = 0; i < n; i++)
+        for(i = 0; i < n-1; i++)
         {
             fib_num = hugeAdd(current, previous);
             previous = current;
             current = fib_num;
-
         }
     }
 
@@ -222,31 +229,30 @@ HugeInteger *fib(int n)
 // print a HugeInteger (followed by a newline character)
 void hugePrint(HugeInteger *p)
 {
-	int i;
-
-	if (p == NULL || p->digits == NULL)
-	{
-		printf("(null pointer)\n");
-		return;
-	}
-
-	for (i = p->length - 1; i >= 0; i--)
-		printf("%d", p->digits[i]);
-	printf("\n");
+    int i;
+    
+    if (p == NULL || p->digits == NULL)
+    {
+        printf("(null pointer)\n");
+        return;
+    }
+    
+    for (i = p->length - 1; i >= 0; i--)
+        printf("%d", p->digits[i]);
+    printf("\n");
 }
 
 int main(void)
 {
-	int i;
-	HugeInteger *p;
-
-	for (i = 0; i <= 10; i++)
-	{
-		printf("F(%d) = ", i);
-		hugePrint(p = fib(i));
-		hugeDestroyer(p);
-	}
-
-	return 0;
+    int i;
+    HugeInteger *p;
+    
+    for (i = 0; i <= 1000; i++)
+    {
+        printf("F(%d) = ", i);
+        hugePrint(p = fib(i));
+        hugeDestroyer(p);
+    }
+    return 0;
 }
 
