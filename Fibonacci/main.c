@@ -188,20 +188,20 @@ HugeInteger *hugeAdd(HugeInteger *p, HugeInteger *q)
 
 HugeInteger *fib(int n)
 {
-    int i;
+    int i = 0;
 
     //Struct to hold the final fib number
     HugeInteger *fib_num = malloc(sizeof(HugeInteger));
-   // fib_num->digits = calloc(20000,sizeof(int));
+    fib_num->digits = calloc(20000,sizeof(int));
 
     //Struct to hold the previous fib number.
     HugeInteger *current = malloc(sizeof(HugeInteger));
-   // current->digits = calloc(20000,sizeof(int));
+    current->digits = calloc(20000,sizeof(int));
     current = parseInt(1);
 
     //Struct to hold the previous previous fib number.
     HugeInteger *previous = malloc(sizeof(HugeInteger));
-  //  previous->digits = calloc(20000,sizeof(int));
+    previous->digits = calloc(20000,sizeof(int));
     previous = parseInt(0);
 
     if (n == 0)
@@ -217,7 +217,7 @@ HugeInteger *fib(int n)
     }
     else
     {
-        for(i = 0; i <= n-1; i++)
+        for(i = 0; i < n-1; i++)
         {
             fib_num = hugeAdd(current, previous);
             previous = current;
@@ -238,3 +238,6 @@ double hoursSpent(void)
     return 25;
     
 }
+
+
+
