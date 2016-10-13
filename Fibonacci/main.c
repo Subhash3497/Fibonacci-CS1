@@ -238,27 +238,3 @@ double hoursSpent(void)
     return 25;
     
 }
-
-// print a HugeInteger (followed by a newline character)
-void hugePrint(HugeInteger *p)
-{
-    int i;
-    
-    if (p == NULL || p->digits == NULL)
-    {
-        printf("(null pointer)\n");
-        return;
-    }
-    
-    for (i = p->length - 1; i >= 0; i--)
-        printf("%d", p->digits[i]);
-    printf("\n");
-}
-
-int main(void)
-{
-    hugePrint(parseString(""));
-
-    
-    return 0;
-}
