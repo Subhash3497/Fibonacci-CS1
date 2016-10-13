@@ -15,7 +15,7 @@ HugeInteger *parseString(char *str)
     int string_length;
     HugeInteger *big_num;
     big_num = malloc(sizeof(big_num));
-
+//Checking for NUll and memory leaks.
     if (str == NULL)
     {
         return NULL;
@@ -26,15 +26,15 @@ HugeInteger *parseString(char *str)
         free(big_num);
         return NULL;
     }
-    else if (str == "")
+    else if (strcmp(str, ""))
     {
         str = "0";
     }
-
+//Setting the length of the huge number array.
     string_length = strlen(str);
     big_num->length = string_length;
     big_num->digits = calloc(string_length + 1,sizeof(int));
-
+//Converts string ASCII values to integers.
     for (i = string_length; i >= 0; i--, j++)
     {
         temp = str[i - 1];
@@ -46,6 +46,7 @@ HugeInteger *parseString(char *str)
 
 HugeInteger *hugeDestroyer(HugeInteger *p)
 {
+//Returns Null if the input is Null.
     if (p == NULL)
     {
         return NULL;
@@ -65,24 +66,25 @@ HugeInteger *parseInt(unsigned int n)
     unsigned int temp = 0;
     int i = 0;
     unsigned int number = n;
-
+    
+//Creation and Allocation
     HugeInteger *big_num;
     big_num = malloc(sizeof(HugeInteger));
     big_num->digits = calloc(11,sizeof(int));
 
-
+//Finds the number of digits in the unsigned int.
     for(temp = n; temp >= 1; decimalPlaces++)
     {
         temp/=10;
     }
-
+//Sets the basecase decimal place.
     if (decimalPlaces == 0)
     {
         big_num->length = 1;
     }
-    else
+    else//Sets the length in the hugeinteger struct.
         big_num->length = decimalPlaces;
-
+//Checks for null cases.
     if (big_num->digits == NULL)
     {
         puts("Error! Could not allocate memory.");
@@ -95,7 +97,7 @@ HugeInteger *parseInt(unsigned int n)
         free(big_num);
         return NULL;
     }
-
+//Splits up the interger into digit values and puts it into the array.
     for (i = 0; i < big_num->length; i++)
     {
         temp = (number % 10);
@@ -111,7 +113,7 @@ unsigned int *toUnsignedInt(HugeInteger *p)
     int i, j = 1;
     unsigned int number = 0;
     unsigned int *inputnum = malloc(sizeof(unsigned int));
-
+//Checks for NULL cases.
     if (p == NULL)
     {
         return NULL;
@@ -123,11 +125,13 @@ unsigned int *toUnsignedInt(HugeInteger *p)
 
     for (i = 0; i < p->length; i++)
     {
+//Checks to see if conversion to unsinged int is possible.
         if(number > UINT_MAX)
         {
             free(inputnum);
             return NULL;
         }
+//Converts number in array to unsigned int.
         number += (p->digits[i] % 10) * j;
         j *= 10;
     }
@@ -188,16 +192,16 @@ HugeInteger *fib(int n)
 
     //Struct to hold the final fib number
     HugeInteger *fib_num = malloc(sizeof(HugeInteger));
-    fib_num->digits = calloc(300,sizeof(int));
+    fib_num->digits = calloc(10000,sizeof(int));
 
     //Struct to hold the previous fib number.
     HugeInteger *current = malloc(sizeof(HugeInteger));
-    current->digits = calloc(300,sizeof(int));
+    current->digits = calloc(10000,sizeof(int));
     current = parseInt(1);
 
     //Struct to hold the previous previous fib number.
     HugeInteger *previous = malloc(sizeof(HugeInteger));
-    previous->digits = calloc(300,sizeof(int));
+    previous->digits = calloc(10000,sizeof(int));
     previous = parseInt(0);
 
     if (n == 0)
@@ -224,7 +228,16 @@ HugeInteger *fib(int n)
     return fib_num;
 }
 
+double difficultyRating(void)
+{
+    return 3.8;
+}
 
+double hoursSpent(void)
+{
+    return 25;
+    
+}
 
 // print a HugeInteger (followed by a newline character)
 void hugePrint(HugeInteger *p)
@@ -247,12 +260,7 @@ int main(void)
     int i;
     HugeInteger *p;
     
-    for (i = 0; i <= 1000; i++)
-    {
-        printf("F(%d) = ", i);
-        hugePrint(p = fib(i));
-        hugeDestroyer(p);
-    }
+    hugePrint(fib(15000));
     return 0;
 }
 
