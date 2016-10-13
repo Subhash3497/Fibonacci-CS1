@@ -26,7 +26,7 @@ HugeInteger *parseString(char *str)
         free(big_num);
         return NULL;
     }
-    else if (strcmp(str, ""))
+    else if (str == "")
     {
         str = "0";
     }
@@ -192,16 +192,16 @@ HugeInteger *fib(int n)
 
     //Struct to hold the final fib number
     HugeInteger *fib_num = malloc(sizeof(HugeInteger));
-    fib_num->digits = calloc(10000,sizeof(int));
+   // fib_num->digits = calloc(20000,sizeof(int));
 
     //Struct to hold the previous fib number.
     HugeInteger *current = malloc(sizeof(HugeInteger));
-    current->digits = calloc(10000,sizeof(int));
+   // current->digits = calloc(20000,sizeof(int));
     current = parseInt(1);
 
     //Struct to hold the previous previous fib number.
     HugeInteger *previous = malloc(sizeof(HugeInteger));
-    previous->digits = calloc(10000,sizeof(int));
+  //  previous->digits = calloc(20000,sizeof(int));
     previous = parseInt(0);
 
     if (n == 0)
@@ -217,7 +217,7 @@ HugeInteger *fib(int n)
     }
     else
     {
-        for(i = 0; i < n-1; i++)
+        for(i = 0; i <= n-1; i++)
         {
             fib_num = hugeAdd(current, previous);
             previous = current;
@@ -257,10 +257,8 @@ void hugePrint(HugeInteger *p)
 
 int main(void)
 {
-    int i;
-    HugeInteger *p;
+    hugePrint(parseString(""));
+
     
-    hugePrint(fib(15000));
     return 0;
 }
-
